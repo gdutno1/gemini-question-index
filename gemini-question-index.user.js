@@ -2,7 +2,7 @@
 // @name         Gemini 对话侧边快速索引
 // @name:en      Gemini Question Index
 // @namespace    http://tampermonkey.net/
-// @version      1.3.1
+// @version      1.4.0
 // @description  在 Gemini 当前对话的右侧列出已加载的提问，点击即可定位。
 // @description:en Jump to your prompts from a collapsible outline in the current Gemini chat.
 // @author       gdutno1
@@ -69,18 +69,24 @@
             padding: 7px 13px;
         }
 
+        #gemini-toc-panel-area {
+            box-sizing: border-box;
+            width: 100%;
+            padding-top: 8px;
+            pointer-events: auto;
+        }
+
+        #gemini-toc-panel-area[hidden] {
+            display: none;
+        }
+
         #gemini-toc-panel {
             display: flex;
             flex-direction: column;
             width: 100%;
-            margin-top: 8px;
             max-height: min(65vh, calc(100dvh - 140px));
             overflow: hidden;
             border-radius: 12px;
-        }
-
-        #gemini-toc-panel[hidden] {
-            display: none;
         }
 
         #gemini-toc-header {
@@ -158,11 +164,14 @@
     }
 
     const toggle = makeButton('提问目录 · 0', 'gemini-toc-toggle');
+    const panelArea = document.createElement('div');
+    panelArea.id = 'gemini-toc-panel-area';
+    panelArea.hidden = true;
     const panel = document.createElement('nav');
     panel.id = 'gemini-toc-panel';
     panel.setAttribute('aria-label', '当前对话的提问');
     toggle.setAttribute('aria-controls', panel.id);
-    toggle.setAttribute('aria-expanded', 'true');
+    toggle.setAttribute('aria-expanded', 'false');
 
     const header = document.createElement('div');
     header.id = 'gemini-toc-header';
@@ -177,14 +186,27 @@
     empty.id = 'gemini-toc-empty';
     empty.textContent = '当前没有已加载的提问';
     panel.append(header, list, empty);
-    container.append(toggle, panel);
+    panelArea.append(panel);
+    container.append(toggle, panelArea);
     document.body.append(container);
 
-    toggle.addEventListener('click', () => {
-        panel.hidden = !panel.hidden;
-        toggle.setAttribute('aria-expanded', String(!panel.hidden));
-        if (!panel.hidden) updateIndex();
+    function setPanelOpen(open) {
+        if (panelArea.hidden === !open) return;
+        if (!open && panel.contains(document.activeElement)) {
+            toggle.focus({ preventScroll: true });
+        }
+        panelArea.hidden = !open;
+        toggle.setAttribute('aria-expanded', String(open));
+        if (open) updateIndex();
+    }
+
+    container.addEventListener('pointerenter', (event) => {
+        if (event.pointerType === 'mouse') setPanelOpen(true);
     });
+    container.addEventListener('pointerleave', (event) => {
+        if (event.pointerType === 'mouse') setPanelOpen(false);
+    });
+    toggle.addEventListener('click', () => setPanelOpen(panelArea.hidden));
     refresh.addEventListener('click', updateIndex);
 
     function readQuestion(node) {

@@ -10,7 +10,7 @@
 
 ## 使用方法
 
-- 右侧「提问目录」显示当前对话已加载的提问数量，点标题可展开或收起。
+- 右侧「提问目录」默认收起，标题显示当前对话已加载的提问数量。鼠标移到标题上时展开，移出整个目录时收起。也可触屏轻点标题，或用键盘聚焦标题后按 Enter 展开或收起。
 - 条目按提问顺序排列。点任一条，页面会滚动到原提问并短暂高亮。鼠标悬停在条目上可看完整提问。
 - 发送新提问、修改提问或切换对话后，目录会随页面更新。长对话里可以先向上滚动，让 Gemini 加载更早的消息，必要时点「刷新」重新读取目录。
 
@@ -36,7 +36,7 @@ Gemini Question Index adds a collapsible list of your prompts to the right side 
 1. Install [Tampermonkey](https://www.tampermonkey.net/) for Edge or Chrome.
 2. Enable **Allow User Scripts** in the browser's extension settings for Tampermonkey. See [Tampermonkey's permission guide](https://www.tampermonkey.net/faq.php?q=Q209).
 3. Install from the [Greasy Fork listing](https://greasyfork.org/en/scripts/606844) or [directly from GitHub](https://raw.githubusercontent.com/gdutno1/gemini-question-index/main/gemini-question-index.user.js), then confirm in Tampermonkey.
-4. Open or reload a [Gemini](https://gemini.google.com/) chat. Click **提问目录** to open or collapse the prompt list, and **刷新** to refresh it manually.
+4. Open or reload a [Gemini](https://gemini.google.com/) chat. Hover over **提问目录** to open the prompt list and move the pointer outside the outline to close it. You can also tap the heading or focus it and press Enter to toggle the list. Select **刷新** to refresh it manually.
 
 The script reads prompts already loaded in the current Gemini tab. It has no external dependencies and does not upload, store, or sync your chat content. Verified on Windows with Microsoft Edge and Tampermonkey.
 
